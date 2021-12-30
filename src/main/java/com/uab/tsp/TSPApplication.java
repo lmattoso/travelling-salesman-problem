@@ -17,10 +17,14 @@ public class TSPApplication {
     public void startProcess(String citiesFileName) {
         CitiesReader citiesReader = new CitiesReader();
         List<City> cities = citiesReader.getCitiesFromFile(citiesFileName);
-        System.out.println(cities);
+        System.out.println(cities.size());
         final int n = cities.size();
         final int maxIter = (int)(0.0003 * Math.pow(n, 4)); //Pag. 134 how to solve it: modern heuristics
         final int tenureSize = 3 * n; // Pag. 133 how to solve it: modern heuristics
+
+
+        System.out.println("n = " + n + ", maxIter = " + maxIter + ", tenureSize = " + tenureSize);
+
         TabuSearch ts = new TabuSearch(tenureSize, maxIter, new BigDecimal(-1));
         Solution solution = new Solution(cities);
 
