@@ -25,6 +25,8 @@ public class Solution {
             City city2 = list.get(pos+1);
             cost = cost.add(city1.getDistances().get(city2.getId()));
         }
+        cost = cost.add(list.get(list.size()-1).getDistances().get(list.get(0).getId()));
+
         return cost;
     }
 

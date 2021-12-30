@@ -40,12 +40,12 @@ public class SolutionTest {
 
 
        Solution solution = new Solution(a,b,c,d,e,f);
-       assertEquals(50.0d, solution.cost());
+       assertEquals(55, solution.cost().intValue());
 
-       assertEquals("[0,1,2,3,4,5]", solution.toString());
+       assertEquals("[0,1,2,3,4,5](55)", solution.toString());
        Solution solution2 = solution.move();
 
-       assertNotSame("[0,1,2,3,4,5]", solution2.toString());
+       assertNotSame("[0,1,2,3,4,5](55)", solution2.toString());
        assertTrue(solution2 != solution);
        assertNotSame(solution2, solution);
 
