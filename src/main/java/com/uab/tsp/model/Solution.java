@@ -59,11 +59,32 @@ public class Solution {
         return solution;
     }
 
-    public Solution move() {
+    public Solution randomMove() {
         Solution clone = this.clone();
         clone.randomSwap();
         return clone;
     }
+
+    public List<Solution> switchPairs() {
+        List<Solution> solutionList = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++ ) {
+            for(int j = i; j < list.size(); j++) {
+                Solution clone = this.clone();
+                clone.swapCities(i, j);
+                solutionList.add(clone);
+            }
+        }
+        return solutionList;
+    }
+
+    private void swapCities(int i, int j) {
+        City city1 = list.get(i);
+        City city2 = list.get(j);
+
+        list.set(i, city2);
+        list.set(j, city1);
+    }
+
 
     @Override
     public String toString() {

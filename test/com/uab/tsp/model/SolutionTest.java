@@ -43,7 +43,7 @@ public class SolutionTest {
        assertEquals(55, solution.cost().intValue());
 
        assertEquals("[0,1,2,3,4,5](55)", solution.toString());
-       Solution solution2 = solution.move();
+       Solution solution2 = solution.randomMove();
 
        assertNotSame("[0,1,2,3,4,5](55)", solution2.toString());
        assertTrue(solution2 != solution);

@@ -14,7 +14,7 @@ public class TabuSearchTest {
 
     @Test
     public void tabuSearchTest() {
-        TabuSearch tabuSearch = new TabuSearch(30, 10000, new BigDecimal(-1));
+        TabuSearch tabuSearch = new TabuSearch(30, 100, new BigDecimal(-1));
         City a = new City(0);
         City b = new City(1);
         City c = new City(2);

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class TabuSearch {
 
     private final int maxIter;
+    private int maxTries = 1;
     private final BigDecimal minCost;
     private int iter = 0;
     private CircularFifoQueue<Solution> tabuList;
@@ -21,22 +22,34 @@ public class TabuSearch {
 
     public Solution search(Solution initialSolution) {
         Solution current = initialSolution;
-        Solution best = initialSolution;
-        boolean end = false;
-        while(!end) {
+        Solution globalBest = initialSolution;
+        maxTries = current.getList().size() <= 100 ? 4: 10; //Pag. 134 how to solve it: modern heuristics (valor 10 é arbitrário)
+        do {
+            current.shuffle(); // generate the tour
+            Solution localBest =  current;
+            for(int tries = 0; tries < maxTries; tries ++) {
+                for (Solution s : current.switchPairs()) {
+                    if ((s.cost().compareTo(current.cost()) < 0)) {
+                        if(!tabuList.contains(s))
+                            current = s;
+                    } else {
+                        tabuList.add(s);
+                    }
+                }
 
-            Solution s = current.move(); // Implementar aqui o 2opt
-            if(s.cost().compareTo(best.cost()) < 0 && !tabuList.contains(s)) {
-                best = s;
+                if(current.cost().compareTo(localBest.cost()) < 0) {
+                    localBest = current;
+
+                }
             }
-            tabuList.add(current);
-            current = s;
-            iter++;
-            if(iter >= maxIter || best.cost().compareTo(minCost) <= 0)
-                end = true;
-        }
+            if (localBest.cost().compareTo(globalBest.cost()) < 0) {
+                globalBest = localBest;
+            }
 
-        return best;
+            iter++;
+        } while (!(iter >= maxIter || globalBest.cost().compareTo(minCost) <= 0));
+
+        return globalBest;
     }
 
 }
