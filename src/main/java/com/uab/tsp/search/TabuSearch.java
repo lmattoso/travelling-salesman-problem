@@ -25,7 +25,7 @@ public class TabuSearch {
         boolean end = false;
         while(!end) {
 
-            Solution s = current.move();
+            Solution s = current.move(); // Implementar aqui o 2opt
             if(s.cost().compareTo(best.cost()) < 0 && !tabuList.contains(s)) {
                 best = s;
             }
