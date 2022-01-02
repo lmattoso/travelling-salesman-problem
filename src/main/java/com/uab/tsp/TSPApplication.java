@@ -28,7 +28,7 @@ public class TSPApplication {
         TabuSearch ts = new TabuSearch(tenureSize, maxIter, new BigDecimal(-1));
         Solution solution = new Solution(cities);
 
-
+        //solution.shuffle();
         Solution best = ts.search(solution);
         System.out.println(best.cost());
 
