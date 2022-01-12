@@ -1,6 +1,7 @@
 package com.uab.tsp.search;
 
 import com.uab.tsp.model.City;
+import com.uab.tsp.model.Results;
 import com.uab.tsp.model.Solution;
 import com.uab.tsp.search.TabuSearch;
 import org.junit.Test;
@@ -13,8 +14,8 @@ import static junit.framework.Assert.assertTrue;
 public class TabuSearchTest {
 
     @Test
-    public void tabuSearchTest() {
-        TabuSearch tabuSearch = new TabuSearch(30, 100, new BigDecimal(-1));
+    public void tabuSearchTest() throws InterruptedException {
+        TabuSearch tabuSearch = new TabuSearch(30, 1, 1, new BigDecimal(-1), false, -1, 0.1);
         City a = new City(0);
         City b = new City(1);
         City c = new City(2);
@@ -45,16 +46,7 @@ public class TabuSearchTest {
 
 
         Solution solution = new Solution(a,b,c,d,e,f);
-        System.out.println(solution);
-
-        Solution best = tabuSearch.search(solution);
-        System.out.println(best);
-
-        assertNotNull(best);
-        assertNotNull(best.cost());
-        assertNotNull(solution.cost());
-        assertTrue("Custo do melhor não é menor que o custo da solucao inicial", best.cost().compareTo(solution.cost()) < 0);
-
-        System.out.println(best.cost() + " < " + solution.cost());
+        Results search = tabuSearch.search(solution);
+        System.out.println(search);
     }
 }

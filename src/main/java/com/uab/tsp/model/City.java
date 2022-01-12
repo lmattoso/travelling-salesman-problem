@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -25,5 +26,25 @@ public class City {
     public BigDecimal putSymmetricDistance(City city, BigDecimal value) {
         city.distances.put(id, value);
         return distances.put(city.getId(), value);
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(id, city.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
