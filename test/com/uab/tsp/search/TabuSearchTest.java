@@ -15,7 +15,7 @@ public class TabuSearchTest {
 
     @Test
     public void tabuSearchTest() throws InterruptedException {
-        TabuSearch tabuSearch = new TabuSearch(30, 1, 1, new BigDecimal(-1), false, -1, 0.1);
+        TabuSearch tabuSearch = new TabuSearch(30, 1, 1, new BigDecimal(-1), false, -1, 0.1, false);
         City a = new City(0);
         City b = new City(1);
         City c = new City(2);

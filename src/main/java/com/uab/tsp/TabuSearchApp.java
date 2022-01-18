@@ -24,7 +24,7 @@ public class TabuSearchApp {
         final int maxIter = 20; // (int)(0.0003 * Math.pow(n, 4)); //Pag. 134 how to solve it: modern heuristics
         final int tenureSize = 3 * n; // Pag. 133 how to solve it: modern heuristics
 
-        TabuSearch ts = new TabuSearch(tenureSize, maxIter, 50, new BigDecimal(-1), false, 5, 1);
+        TabuSearch ts = new TabuSearch(tenureSize, maxIter, 50, new BigDecimal(-1), false, 5, 0.85, true);
         Solution solution = new Solution(cities);
 
         //solution.shuffle();

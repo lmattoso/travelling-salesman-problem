@@ -14,6 +14,7 @@ public class TabuSearch {
 
     private final int maxTriesMove;
     private final BigDecimal minCost;
+    private final boolean stochasticSample;
     private double neighbourPerc;
     private int maxStagnantTries;
     private int maxTries;
@@ -22,7 +23,7 @@ public class TabuSearch {
     private Set<TwoInterchangeMove> frequencyBasedMemory;
     private boolean isFrequencyBasedMemory;
 
-    public TabuSearch(int tenure, int maxTriesMove, int maxTries, BigDecimal minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc) {
+    public TabuSearch(int tenure, int maxTriesMove, int maxTries, BigDecimal minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample) {
         this.recencyBasedMemory = new CircularFifoQueue<>(tenure);
         this.maxTriesMove = maxTriesMove;
         this.minCost = minCost;
@@ -31,6 +32,7 @@ public class TabuSearch {
         this.maxTries = maxTries;
         this.maxStagnantTries = maxStagnantTries;
         this.neighbourPerc = neighbourPerc;
+        this.stochasticSample = stochasticSample;
     }
 
     public Results search(Solution startingTour) {
@@ -43,9 +45,8 @@ public class TabuSearch {
         int tries = 0;
 
         do {
-            //candidateSolution = randomizeCandidate(candidateSolution);
             for (; tries < maxTriesMove; tries++) {
-                Collection<TwoInterchangeMove> candidates = sampleStochastic(candidateSolution.getMoves(), this.neighbourPerc);
+                Collection<TwoInterchangeMove> candidates = stochasticSample ? sampleStochastic(candidateSolution.getMoves(), this.neighbourPerc) : sample(candidateSolution.getMoves(), this.neighbourPerc);
                 results.setNumberOfNeighbours(candidates.size());
                 for (TwoInterchangeMove candidate : candidates) {
 
@@ -82,7 +83,7 @@ public class TabuSearch {
             tries = 0;
 
 
-        } while (!(iter >= maxTries || globalBest.cost().compareTo(minCost) <= 0));
+        } while (!(iter >= maxTries || globalBest.cost().compareTo(minCost) <= 0 || maxStagnantTries == 0));
 
 
         results.setSolution(globalBest);
@@ -105,7 +106,6 @@ public class TabuSearch {
         if (bestSoFarWithNewMove.costLessThan(bestSoFar)) {
             return true;
         }
-
         return false;
     }
 
@@ -147,6 +147,8 @@ public class TabuSearch {
     }
 
     private Collection<TwoInterchangeMove> sampleStochastic(List<TwoInterchangeMove> moves, double size) {
+        if(size == 1)
+            return moves;
         int s = (int)(moves.size() * size);
         Collections.shuffle(moves);
         return moves.stream().collect(Collectors.toList()).subList(0, s);

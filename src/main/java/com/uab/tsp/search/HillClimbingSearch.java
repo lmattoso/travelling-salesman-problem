@@ -82,6 +82,8 @@ public class HillClimbingSearch {
     }
 
     private Collection<TwoInterchangeMove> sampleStochastic(List<TwoInterchangeMove> moves, double size) {
+        if(size == 1)
+            return moves;
         int s = (int)(moves.size() * size);
         Collections.shuffle(moves);
         return moves.stream().collect(Collectors.toList()).subList(0, s);

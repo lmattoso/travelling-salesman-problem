@@ -18,7 +18,7 @@ public class HillClimbingApp {
 
         CitiesReader citiesReader = new CitiesReader();
         List<City> cities = citiesReader.getCitiesFromFile(citiesFileName);
-        HillClimbingSearch randomSearch = new HillClimbingSearch(20, 50, new BigDecimal(-1), 0.5);
+        HillClimbingSearch randomSearch = new HillClimbingSearch(20, 50, new BigDecimal(-1), 0.75);
         Solution solution = new Solution(cities);
 
         Results results = randomSearch.search(solution);
