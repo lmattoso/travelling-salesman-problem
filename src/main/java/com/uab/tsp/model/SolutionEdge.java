@@ -3,7 +3,6 @@ package com.uab.tsp.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.graphstream.graph.Edge;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -28,7 +27,6 @@ public class SolutionEdge implements Comparable<SolutionEdge> {
         return Objects.hash(city1, city2);
     }
 
-
     public boolean nonAdjecent(SolutionEdge e2) {
         return !this.city1.equals(e2.getCity1()) && !this.city1.equals(e2.getCity2()) && !this.city2.equals(e2.getCity1()) && !this.city2.equals(e2.getCity2());
     }
@@ -39,8 +37,7 @@ public class SolutionEdge implements Comparable<SolutionEdge> {
 
     @Override
     public String toString() {
-        return "[" + city1.getId() +
-                "-->" + city2.getId() + "]";
+        return "[" + city1.getId() +  "-->" + city2.getId() + "]";
     }
 
     public BigDecimal distance() {

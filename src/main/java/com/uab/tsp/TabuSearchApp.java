@@ -5,13 +5,14 @@ import com.uab.tsp.model.Results;
 import com.uab.tsp.model.Solution;
 import com.uab.tsp.search.TabuSearch;
 import com.uab.tsp.util.CitiesReader;
+import com.uab.tsp.util.GenerateReportUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class TabuSearchApp {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         new TabuSearchApp().startProcess("cities/ulysses16.xml");
     }
 
@@ -29,9 +30,11 @@ public class TabuSearchApp {
 
         //solution.shuffle();
         Results results = ts.search(solution);
+
         System.out.println("Cost: " + results.getSolution().cost());
         System.out.println("Number of Neighbours: " + results.getNumberOfNeighbours());
         System.out.println("Time: " + results.getTimeElapsed()+"ms");
 
+        GenerateReportUtil.generateReport(results);
     }
 }

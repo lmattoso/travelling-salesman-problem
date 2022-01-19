@@ -10,6 +10,8 @@ public class Solution {
 
     private List<City> list = new LinkedList<>();
     private int frequency;
+    private int iteration;
+    private int tryNumber;
 
     public Solution(City ... cities) {
         list.addAll(Arrays.asList(cities));
@@ -19,9 +21,8 @@ public class Solution {
         list.addAll(cities);
     }
 
-
     public BigDecimal cost() {
-        BigDecimal cost = new BigDecimal(0.0);
+        BigDecimal cost = new BigDecimal("0.0");
         for(int pos = 0; pos < list.size()-1; pos++) {
             City city1 = list.get(pos);
             City city2 = list.get(pos+1);
@@ -74,7 +75,13 @@ public class Solution {
 
     @Override
     public String toString() {
-        return "[" + list.stream().map( city -> city.getId() + "").reduce((s1, s2) -> s1 + "," + s2).orElse("") + "](" +  cost() + ")";
+        return "[" + this.getStringCityList() + "](" + this.cost() + ")";
+    }
+
+    public String getStringCityList() {
+        return list.stream().map( city -> city.getId() + "")
+            .reduce((s1, s2) -> s1 + "," + s2)
+            .orElse("");
     }
 
     @Override
@@ -163,6 +170,4 @@ public class Solution {
             list.set(pos2, city1);
         }
     }
-
-
 }

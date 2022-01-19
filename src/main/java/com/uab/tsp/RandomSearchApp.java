@@ -9,7 +9,7 @@ import com.uab.tsp.util.CitiesReader;
 import java.util.List;
 
 public class RandomSearchApp {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         new RandomSearchApp().startProcess("cities/ulysses16.xml");
     }
 
@@ -22,6 +22,5 @@ public class RandomSearchApp {
 
         Results results = randomSearch.search(solution);
         System.out.println("Cost: " +results.getSolution().cost());
-
     }
 }

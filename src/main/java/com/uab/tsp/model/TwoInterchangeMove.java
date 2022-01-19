@@ -3,13 +3,10 @@ package com.uab.tsp.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.graphstream.graph.Edge;
 
-import java.awt.geom.Area;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Objects;
 
 @Data
@@ -40,11 +37,8 @@ public class TwoInterchangeMove implements Comparable<TwoInterchangeMove> {
 
     @Override
     public String toString() {
-        return
-                " " + edge1 +
-                " / " + edge2;
+        return " " + edge1 + " / " + edge2;
     }
-
 
     @Override
     public boolean equals(Object o) {

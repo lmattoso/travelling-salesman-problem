@@ -5,6 +5,7 @@ import com.uab.tsp.model.Solution;
 import com.uab.tsp.model.TwoInterchangeMove;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +15,8 @@ public class HillClimbingSearch {
 
     private final int maxTriesMove;
     private final BigDecimal minCost;
-    private double neighbourPerc;
-    private int maxTries;
+    private final double neighbourPerc;
+    private final int maxTries;
     private int iter = 0;
 
     public HillClimbingSearch(int maxTriesMove, int maxTries, BigDecimal minCost, double neighbourPerc) {
@@ -49,13 +50,17 @@ public class HillClimbingSearch {
                 candidateSolution = candidateSolution.apply(bestMove);
                 if (candidateSolution.costLessThan(bestSoFar)) {
                     bestSoFar = candidateSolution;
-                    results.get("Local Best Solutions").add(candidateSolution);
+                    candidateSolution.setTryNumber(tries);
+                    candidateSolution.setFrequency(iter);
+                    results.getLocalBestSolutions().add(candidateSolution);
                 }
             }
 
             if (bestSoFar.costLessThan(globalBest)) {
                 globalBest = bestSoFar;
-                results.get("Global Best Solutions").add(candidateSolution);
+                candidateSolution.setTryNumber(tries);
+                candidateSolution.setFrequency(iter);
+                results.getGlobalBestSolutions().add(candidateSolution);
             }
             iter++;
 
@@ -86,7 +91,6 @@ public class HillClimbingSearch {
             return moves;
         int s = (int)(moves.size() * size);
         Collections.shuffle(moves);
-        return moves.stream().collect(Collectors.toList()).subList(0, s);
+        return new ArrayList<>(moves).subList(0, s);
     }
-
 }
