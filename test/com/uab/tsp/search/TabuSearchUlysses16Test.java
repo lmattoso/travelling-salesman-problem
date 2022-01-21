@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class DeepTabuSearchTest {
+public class TabuSearchUlysses16Test {
 
     private long randomSeed = 1L;
 

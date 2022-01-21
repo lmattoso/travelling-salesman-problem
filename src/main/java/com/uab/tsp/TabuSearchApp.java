@@ -7,6 +7,8 @@ import com.uab.tsp.search.TabuSearch;
 import com.uab.tsp.util.CitiesReader;
 import com.uab.tsp.util.GenerateReportUtil;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
@@ -27,7 +29,7 @@ public class TabuSearchApp {
         return ts;
     }
 
-    public TabuSearch startProcess(String citiesFileName, String reportName, Random random, boolean ignoreTabu, int maxTriesMove, int maxTries, int tenureSize, double minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample, long timeLimitMillsecs) {
+    public TabuSearch startProcess(String citiesFileName, String reportName, Random random, boolean ignoreTabu, int maxTriesMove, int maxTries, int tenureSize, double minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample, long timeLimitMillsecs) throws FileNotFoundException {
 
         CitiesReader citiesReader = new CitiesReader();
         List<City> cities = citiesReader.getCitiesFromFile("cities/" + citiesFileName);
@@ -40,24 +42,26 @@ public class TabuSearchApp {
         if(random != null) {
             solution.shuffle(random);
         }
-        System.out.println("=============================== " + citiesFileName + " ===================================");
-        System.out.println("Tabu? " + !ignoreTabu);
-        System.out.println("Iterations: " + results.getIter());
-        System.out.println("Cost: " + results.getSolution().cost());
-        System.out.println("Number of Neighbours: " + results.getNumberOfNeighbours());
-        System.out.println("Time: " + results.getTimeElapsed()+"ms");
+        PrintStream out = new PrintStream("C:\\temp\\" + citiesFileName + " - " + reportName + ".txt");
+
+        out.println("=============================== " + citiesFileName + " ===================================");
+        out.println("Tabu? " + !ignoreTabu);
+        out.println("Iterations: " + results.getIter());
+        out.println("Cost: " + results.getSolution().cost());
+        out.println("Number of Neighbours: " + results.getNumberOfNeighbours());
+        out.println("Time: " + results.getTimeElapsed()+"ms");
         if(!ignoreTabu) {
-            System.out.println("Memory type: " + (isFrequencyBasedMemory ? "frequency" : "recency"));
-            System.out.println("Tenure final size: " + Math.max(ts.getRecencyBasedMemory().size(), ts.getFrequencyBasedMemory().size()));
-            System.out.println("Aspirations: " + ts.getAspirations());
-            System.out.println("Tabu Hits: " + ts.getTabuHits());
-            System.out.println("Stagnation left: " + ts.getMaxStagnantTries());
+            out.println("Memory type: " + (isFrequencyBasedMemory ? "frequency" : "recency"));
+            out.println("Tenure final size: " + Math.max(ts.getRecencyBasedMemory().size(), ts.getFrequencyBasedMemory().size()));
+            out.println("Aspirations: " + ts.getAspirations());
+            out.println("Tabu Hits: " + ts.getTabuHits());
+            out.println("Stagnation left: " + ts.getMaxStagnantTries());
         }
-        System.out.println("Local Best Solutions: " + results.getLocalBestSolutions().size());
-        System.out.println("Global Best Solutions: " + results.getGlobalBestSolutions().size());
-        System.out.println("Failed candidate solutions: " + ts.getFailedCandidateSolutions());
-        System.out.println("==================================================================================");
-        System.out.println();
+        out.println("Local Best Solutions: " + results.getLocalBestSolutions().size());
+        out.println("Global Best Solutions: " + results.getGlobalBestSolutions().size());
+        out.println("Failed candidate solutions: " + ts.getFailedCandidateSolutions());
+        out.println("==================================================================================");
+        out.println();
 
         results.setName(citiesFileName + " - " + reportName);
 

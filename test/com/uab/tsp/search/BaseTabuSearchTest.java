@@ -4,6 +4,7 @@ import com.uab.tsp.TabuSearchApp;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,34 +19,61 @@ public class BaseTabuSearchTest {
     private final boolean isFrequencyBasedMemory = false;
     private final double neighbourPerc = 1;
     private final boolean stochasticSample = false;
-    private final long timeLimitMillsecs = 5000;
+    private final long timeLimitMillsecs = 60000;
     private static final int IGNORE_PARAM = -1;
 
     @Test
-    public void testGr24() throws InterruptedException {
-
+    public void testGr24() throws Exception {
         String testInstance = "gr24.xml";
         final int tenureSize = 3 * 24;
         test(testInstance, tenureSize);
-
     }
 
     @Test
-    public void testP43() throws InterruptedException {
+    public void testFtv35() throws Exception {
+        String testInstance = "ftv35.xml";
+        final int tenureSize = 3 * 35;
+        test(testInstance, tenureSize);
+    }
+
+    @Test
+    public void testGr17() throws Exception {
+        String testInstance = "gr17.xml";
+        final int tenureSize = 3 * 17;
+        test(testInstance, tenureSize);
+    }
+
+    @Test
+    public void testGr48() throws Exception {
+        String testInstance = "gr48.xml";
+        final int tenureSize = 3 * 48;
+        test(testInstance, tenureSize);
+    }
+
+
+    @Test
+    public void testP43() throws Exception {
         String testInstance = "p43.xml";
         final int tenureSize = 3 * 43;
         test(testInstance, tenureSize);
     }
 
     @Test
-    public void testRd100() throws InterruptedException {
+    public void testRy48p() throws Exception {
+        String testInstance = "ry48p.xml";
+        final int tenureSize = 3 * 43;
+        test(testInstance, tenureSize);
+    }
+
+    @Test
+    public void testRd100() throws Exception {
         String testInstance = "rd100.xml";
         final int tenureSize = 3 * 100;
         test(testInstance, tenureSize);
     }
 
     @Test
-    public void testUlysses16() throws InterruptedException {
+    public void testUlysses16() throws Exception {
         String testInstance = "ulysses16.xml";
         final int tenureSize = 3 * 16;
         test(testInstance, tenureSize);
@@ -53,14 +81,14 @@ public class BaseTabuSearchTest {
 
     @Test
     @Ignore
-    public void testA280() throws InterruptedException {
+    public void testA280() throws Exception {
         String testInstance = "a280.xml";
         final int tenureSize = 3 * 280;
         test(testInstance, tenureSize);
     }
 
 
-    private void test(String testInstance, int tenureSize) throws InterruptedException {
+    private void test(String testInstance, int tenureSize) throws Exception {
         Random random1 = new Random(randomSeed);
         Random random2 = new Random(randomSeed);
 
@@ -68,11 +96,19 @@ public class BaseTabuSearchTest {
         AtomicReference<TabuSearch> ts2 = new AtomicReference<>();
 
         Thread t1 = new Thread( () -> {
-            ts1.set(new TabuSearchApp().startProcess(testInstance, "base test - baseline",  random1, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs));
+            try {
+                ts1.set(new TabuSearchApp().startProcess(testInstance, "base test - baseline",  random1, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
 
         Thread t2 = new Thread( () -> {
-            ts2.set(new TabuSearchApp().startProcess(testInstance, "base test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs));
+            try {
+                ts2.set(new TabuSearchApp().startProcess(testInstance, "base test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
 
         t1.start();

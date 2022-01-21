@@ -4,6 +4,7 @@ import com.uab.tsp.TabuSearchApp;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -61,15 +62,27 @@ public class FrequencyBasedTabuSearchTest {
         AtomicReference<TabuSearch> ts3 = new AtomicReference<>();
 
 
-        ts1.set(new TabuSearchApp().startProcess(testInstance, "frequency test - frequency", random1, false, maxTriesMove, maxTries, tenureSize, minCost, true, maxStagnantTries, neighbourPerc, stochasticSample, timeLimitMillsecs));
+        try {
+            ts1.set(new TabuSearchApp().startProcess(testInstance, "frequency test - frequency", random1, false, maxTriesMove, maxTries, tenureSize, minCost, true, maxStagnantTries, neighbourPerc, stochasticSample, timeLimitMillsecs));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // Irao correr no mesmo tempo que frequency based
         Thread t2 = new Thread( () -> {
-            ts2.set(new TabuSearchApp().startProcess(testInstance, "frequency test - baseline", random2, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed()));
+            try {
+                ts2.set(new TabuSearchApp().startProcess(testInstance, "frequency test - baseline", random2, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed()));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
 
         Thread t3 = new Thread( () -> {
-            ts3.set(new TabuSearchApp().startProcess(testInstance, "frequency test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed()));
+            try {
+                ts3.set(new TabuSearchApp().startProcess(testInstance, "frequency test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed()));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
 
 

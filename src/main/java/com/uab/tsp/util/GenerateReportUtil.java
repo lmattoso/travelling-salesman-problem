@@ -10,13 +10,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GenerateReportUtil {
 
-    private static final List<String> headers = List.of("Iteration", "Try Number", "Cities", "Cost", "Frequency");
+    private static final List<Object> headers = List.of("Iteration", "Try Number", "Cities", "Cost", "Frequency");
     private static final String FILE_PATH = "C:\\temp\\";
 
     public synchronized static void generateReport(Results results) {
@@ -48,20 +49,25 @@ public class GenerateReportUtil {
         createTableRow(sheet, rowNum, GenerateReportUtil.headers);
 
         solutions.forEach(solution -> createTableRow(sheet, rowNum,
-            List.of(Integer.toString(solution.getIteration()),
-                    Integer.toString(solution.getTryNumber()),
+            Arrays.asList(solution.getIteration(),
+                    solution.getTryNumber(),
                     solution.getStringCityList(),
-                    Double.toString(solution.cost().doubleValue()),
-                    Integer.toString(solution.getFrequency()))));
+                    solution.cost().doubleValue(),
+                    solution.getFrequency())));
     }
 
-    private static void createTableRow(XSSFSheet sheet, AtomicInteger rowNum, List<String> headers) {
+    private static void createTableRow(XSSFSheet sheet, AtomicInteger rowNum, List<Object> headers) {
         Row row = sheet.createRow(rowNum.getAndIncrement());
 
         int column = 0;
-        for(String header : headers) {
+        for(Object header : headers) {
             Cell cell = row.createCell(column++);
-            cell.setCellValue(header);
+            if(header instanceof String)
+                cell.setCellValue(String.class.cast(header));
+            if(header instanceof Integer)
+                cell.setCellValue(Integer.class.cast(header));
+            if(header instanceof Double)
+                cell.setCellValue(Double.class.cast(header));
         }
     }
 }
