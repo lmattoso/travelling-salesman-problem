@@ -1,0 +1,11 @@
+=============================== gr17.xml ===================================
+Tabu? false
+Iterations: 577
+Cost: 3718.0
+Number of Neighbours: 204
+Time: 60067ms
+Local Best Solutions: 4
+Global Best Solutions: 3
+Failed candidate solutions: 23516833
+==================================================================================
+

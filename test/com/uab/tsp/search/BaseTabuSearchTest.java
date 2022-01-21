@@ -97,7 +97,7 @@ public class BaseTabuSearchTest {
 
         Thread t1 = new Thread( () -> {
             try {
-                ts1.set(new TabuSearchApp().startProcess(testInstance, "base test - baseline",  random1, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs));
+                ts1.set(new TabuSearchApp().startProcess(testInstance, "base test - baseline",  random1, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs, false));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -105,7 +105,7 @@ public class BaseTabuSearchTest {
 
         Thread t2 = new Thread( () -> {
             try {
-                ts2.set(new TabuSearchApp().startProcess(testInstance, "base test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs));
+                ts2.set(new TabuSearchApp().startProcess(testInstance, "base test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, isFrequencyBasedMemory, IGNORE_PARAM, neighbourPerc, stochasticSample, timeLimitMillsecs, false));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

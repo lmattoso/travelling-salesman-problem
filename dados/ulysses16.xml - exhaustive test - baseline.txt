@@ -1,0 +1,11 @@
+=============================== ulysses16.xml ===================================
+Tabu? false
+Iterations: 60
+Cost: 7108.0
+Number of Neighbours: 61
+Time: 250ms
+Local Best Solutions: 14
+Global Best Solutions: 10
+Failed candidate solutions: 54748
+==================================================================================
+

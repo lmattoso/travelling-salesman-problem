@@ -1,0 +1,11 @@
+=============================== ry48p.xml ===================================
+Tabu? false
+Iterations: 13
+Cost: 37303.0
+Number of Neighbours: 2064
+Time: 61547ms
+Local Best Solutions: 34
+Global Best Solutions: 13
+Failed candidate solutions: 5364983
+==================================================================================
+

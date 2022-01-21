@@ -22,6 +22,7 @@ public class TabuSearch {
     private final CircularFifoQueue<TwoInterchangeMove> recencyBasedMemory;
     private final Set<TwoInterchangeMove> frequencyBasedMemory;
     private final boolean isFrequencyBasedMemory;
+    private final boolean checkAdjacencyEdgesOnly;
     private int maxStagnantTries;
     private int iter = 0;
     private boolean ignoreTabu = false;
@@ -31,7 +32,7 @@ public class TabuSearch {
     private int failedCandidateSolutions = 0;
     private static final long GLOBAL_TIMEOUT = 120000;
 
-    public TabuSearch(int tenure, int maxTriesMove, int maxTries, BigDecimal minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample, long timeLimitMillsecs) {
+    public TabuSearch(int tenure, int maxTriesMove, int maxTries, BigDecimal minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample, long timeLimitMillsecs, boolean checkAdjacencyEdgesOnly) {
         this.recencyBasedMemory = new CircularFifoQueue<>(tenure);
         this.maxTriesMove = maxTriesMove;
         this.minCost = minCost;
@@ -42,6 +43,7 @@ public class TabuSearch {
         this.neighbourPerc = neighbourPerc;
         this.stochasticSample = stochasticSample;
         this.timeLimitMillsecs = timeLimitMillsecs;
+        this.checkAdjacencyEdgesOnly = checkAdjacencyEdgesOnly;
     }
 
     public Results search(Solution startingTour) {
@@ -55,7 +57,10 @@ public class TabuSearch {
 
         do {
             for (; tries < maxTriesMove; tries++) {
-                Collection<TwoInterchangeMove> candidates = stochasticSample ? sampleStochastic(candidateSolution.getMoves(), this.neighbourPerc) : sampleElitist(candidateSolution.getMoves(), this.neighbourPerc);
+                Collection<TwoInterchangeMove> candidates = stochasticSample ?
+                        sampleStochastic(candidateSolution.getMoves(checkAdjacencyEdgesOnly), this.neighbourPerc) :
+                        sampleElitist(candidateSolution.getMoves(checkAdjacencyEdgesOnly), this.neighbourPerc);
+
                 results.setNumberOfNeighbours(candidates.size());
                 for (TwoInterchangeMove candidate : candidates) {
                     bestMove = bestMove != null ? bestMove : candidate;
@@ -107,12 +112,12 @@ public class TabuSearch {
             if (timeLimitMillsecs < 0) {
 
                 if (iter >= maxTries) {
-                    System.out.println("Max Tries reached: " + iter);
+                    //System.out.println("Max Tries reached: " + iter);
                     break;
                 }
 
                 if (globalBest.cost().compareTo(minCost) <= 0) {
-                    System.out.println("Min cost reached: " + globalBest.cost());
+                    //System.out.println("Min cost reached: " + globalBest.cost());
                     break;
                 }
 

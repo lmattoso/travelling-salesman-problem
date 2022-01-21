@@ -1,0 +1,16 @@
+=============================== ry48p.xml ===================================
+Tabu? true
+Iterations: 8
+Cost: 20899.0
+Number of Neighbours: 2064
+Time: 60306ms
+Memory type: recency
+Tenure final size: 129
+Aspirations: 176591
+Tabu Hits: 155
+Stagnation left: -1
+Local Best Solutions: 93
+Global Best Solutions: 8
+Failed candidate solutions: 2924939
+==================================================================================
+

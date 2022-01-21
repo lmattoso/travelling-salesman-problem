@@ -1,0 +1,11 @@
+=============================== p43.xml ===================================
+Tabu? false
+Iterations: 19
+Cost: 28211.0
+Number of Neighbours: 1634
+Time: 61632ms
+Local Best Solutions: 0
+Global Best Solutions: 0
+Failed candidate solutions: 6208503
+==================================================================================
+

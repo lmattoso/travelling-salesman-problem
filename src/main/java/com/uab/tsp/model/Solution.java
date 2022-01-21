@@ -59,18 +59,50 @@ public class Solution {
         return edges;
     }
 
-    public List<TwoInterchangeMove> getMoves() {
+    public List<TwoInterchangeMove> getMoves(boolean checkAdjacencyEdgesOnly) {
         List<SolutionEdge> edges = getEdges();
         List<TwoInterchangeMove> ret = new ArrayList<>();
 
         for (SolutionEdge e1 : edges) {
             for (SolutionEdge e2 : edges) {
-                if (e1 != e2 && e1.nonAdjecent(e2)) {
+                if (e1 != e2 && nonAdjacent(e1, e2, checkAdjacencyEdgesOnly)) {
                     ret.add(new TwoInterchangeMove(e1, e2, 1));
                 }
             }
         }
         return ret;
+    }
+
+    public boolean nonAdjacent(SolutionEdge e1, SolutionEdge e2, boolean checkAdjacencyEdgesOnly) {
+
+        City e1c1 = e1.getCity1();
+        City e1c2 = e1.getCity2();
+
+        City e2c1 = e2.getCity1();
+        City e2c2 = e2.getCity2();
+
+        if(!e1.nonAdjecent(e2))
+            return false;
+
+        if(!checkAdjacencyEdgesOnly) {
+
+            for (int i = 0; i < list.size() - 1; i++) {
+                City c = list.get(i);
+                City next = list.get(i + 1);
+                if (c.equals(e1c2) && next.equals(e2c1))
+                    return false;
+                if (c.equals(e2c2) && next.equals(e1c1))
+                    return false;
+            }
+            City fin = list.get(list.size() - 1);
+            City first = list.get(0);
+            if (fin.equals(e1c2) && first.equals(e2c1))
+                return false;
+            if (fin.equals(e2c2) && first.equals(e1c1))
+                return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -107,7 +139,6 @@ public class Solution {
 
         solution2.swap(move.getEdge1().getCity2(), move.getEdge2().getCity1());
         solution2.swap(move.getEdge1().getCity1(), move.getEdge2().getCity2());
-
 
         return solution1.costLessThan(solution2) ? solution1 : solution2;
     }

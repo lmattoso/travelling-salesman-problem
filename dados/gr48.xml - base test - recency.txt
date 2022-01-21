@@ -1,0 +1,16 @@
+=============================== gr48.xml ===================================
+Tabu? true
+Iterations: 9
+Cost: 6825.0
+Number of Neighbours: 2064
+Time: 66052ms
+Memory type: recency
+Tenure final size: 144
+Aspirations: 163679
+Tabu Hits: 149
+Stagnation left: -1
+Local Best Solutions: 92
+Global Best Solutions: 9
+Failed candidate solutions: 3360938
+==================================================================================
+

@@ -1,0 +1,16 @@
+=============================== p43.xml ===================================
+Tabu? true
+Iterations: 12
+Cost: 5673.0
+Number of Neighbours: 1634
+Time: 61584ms
+Memory type: recency
+Tenure final size: 129
+Aspirations: 42122
+Tabu Hits: 707
+Stagnation left: -8
+Local Best Solutions: 33
+Global Best Solutions: 5
+Failed candidate solutions: 3815130
+==================================================================================
+

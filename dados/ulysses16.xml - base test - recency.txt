@@ -1,0 +1,16 @@
+=============================== ulysses16.xml ===================================
+Tabu? true
+Iterations: 426
+Cost: 7125.0
+Number of Neighbours: 176
+Time: 60133ms
+Memory type: recency
+Tenure final size: 48
+Aspirations: 4178
+Tabu Hits: 21
+Stagnation left: -423
+Local Best Solutions: 12
+Global Best Solutions: 4
+Failed candidate solutions: 14985833
+==================================================================================
+

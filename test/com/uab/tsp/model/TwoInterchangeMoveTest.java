@@ -18,7 +18,7 @@ public class TwoInterchangeMoveTest {
         assertFalse(cities.isEmpty());
 
         Solution solution = new Solution(cities);
-        List<TwoInterchangeMove> moves = solution.getMoves();
+        List<TwoInterchangeMove> moves = solution.getMoves(false);
 
         assertFalse(moves.get(0).equals(moves.get(1)));
         assertTrue(moves.get(0).equals(moves.get(0)));

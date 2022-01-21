@@ -7,16 +7,13 @@ import com.uab.tsp.model.Solution;
 import com.uab.tsp.util.CitiesReader;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class TabuSearchUlysses16Test {
+public class TabuSearchGr17Test {
 
     private long randomSeed = 1L;
     private int maxTriesMove = 15;
@@ -26,37 +23,41 @@ public class TabuSearchUlysses16Test {
     private static final int IGNORE_PARAM = -1;
 
     @Test
-    public void variableRandomSeedUlysses16() throws InterruptedException {
+    public void variableRandomSeedGr17() throws InterruptedException {
         CitiesReader citiesReader = new CitiesReader();
-        List<City> cities = citiesReader.getCitiesFromFile("cities/ulysses16.xml");
+        List<City> cities = citiesReader.getCitiesFromFile("cities/gr17.xml");
         randomSeed = System.currentTimeMillis();
         isFrequencyBasedMemory = false;
         stochasticSample = true;
         neighbourPerc = 0.35;
         maxTriesMove = 15;
-        final int minCost = 6859;
-        final int tenureSize = 11;
+        final int minCost = 2085;
+        final int tenureSize = 3 * 17;
         Solution sol = test(cities, minCost, tenureSize).getSolution();
         System.out.println(sol);
         assertEquals(minCost, sol.cost().doubleValue(), 200d);
     }
 
     @Test
-    public void simulationUlysses16() throws InterruptedException {
+    public void simulationGr17() throws InterruptedException {
         CitiesReader citiesReader = new CitiesReader();
-        List<City> cities = citiesReader.getCitiesFromFile("cities/ulysses16.xml");
+        List<City> cities = citiesReader.getCitiesFromFile("cities/gr17.xml");
         randomSeed = 1L;
         isFrequencyBasedMemory = false;
         stochasticSample = true;
+        Solution best = null;
         for(double d = 0.01 ; d <= 1; d += 0.01) {
             neighbourPerc = d;
-            for(int m = 10; m < 100; m+=5) {
+            for(int m = 10; m < 250; m+=5) {
                 maxTriesMove = m;
-                final int minCost = 6859;
-                final int tenureSize = 3 * 16;
+                final int minCost = 2085;
+                final int tenureSize = 3 * 17;
                 Results results = test(cities, minCost, tenureSize);
-                if( minCost == results.getSolution().cost().intValue() )
-                    System.out.println(m + "," + d + "");
+                best = best != null ? best : results.getSolution();
+                if( minCost >= results.getSolution().cost().intValue() * .85 && results.getSolution().costLessThan(best) ) {
+                    best = results.getSolution();
+                    System.out.println(m + "," + d + "," + results.getSolution().cost());
+                }
             }
         }
     }

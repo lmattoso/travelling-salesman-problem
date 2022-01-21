@@ -1,0 +1,11 @@
+=============================== ftv35.xml ===================================
+Tabu? false
+Iterations: 38
+Cost: 4623.0
+Number of Neighbours: 1116
+Time: 61217ms
+Local Best Solutions: 0
+Global Best Solutions: 0
+Failed candidate solutions: 8480878
+==================================================================================
+

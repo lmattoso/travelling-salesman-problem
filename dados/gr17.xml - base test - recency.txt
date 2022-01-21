@@ -1,0 +1,16 @@
+=============================== gr17.xml ===================================
+Tabu? true
+Iterations: 375
+Cost: 2136.0
+Number of Neighbours: 204
+Time: 60009ms
+Memory type: recency
+Tenure final size: 51
+Aspirations: 17597
+Tabu Hits: 23
+Stagnation left: -371
+Local Best Solutions: 24
+Global Best Solutions: 5
+Failed candidate solutions: 15266086
+==================================================================================
+

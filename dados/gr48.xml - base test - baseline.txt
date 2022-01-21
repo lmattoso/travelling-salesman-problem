@@ -1,0 +1,11 @@
+=============================== gr48.xml ===================================
+Tabu? false
+Iterations: 13
+Cost: 14199.0
+Number of Neighbours: 2064
+Time: 61551ms
+Local Best Solutions: 20
+Global Best Solutions: 8
+Failed candidate solutions: 5365276
+==================================================================================
+

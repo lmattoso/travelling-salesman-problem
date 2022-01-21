@@ -1,0 +1,16 @@
+=============================== gr24.xml ===================================
+Tabu? true
+Iterations: 104
+Cost: 1362.0
+Number of Neighbours: 456
+Time: 60259ms
+Memory type: recency
+Tenure final size: 72
+Aspirations: 36509
+Tabu Hits: 30
+Stagnation left: -97
+Local Best Solutions: 32
+Global Best Solutions: 8
+Failed candidate solutions: 9409729
+==================================================================================
+

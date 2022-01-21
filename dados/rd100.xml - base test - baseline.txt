@@ -1,0 +1,11 @@
+=============================== rd100.xml ===================================
+Tabu? false
+Iterations: 1
+Cost: 49720.82013721698965
+Number of Neighbours: 9500
+Time: 107476ms
+Local Best Solutions: 2
+Global Best Solutions: 1
+Failed candidate solutions: 1899696
+==================================================================================
+

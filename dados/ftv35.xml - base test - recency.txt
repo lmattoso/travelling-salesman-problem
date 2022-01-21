@@ -1,0 +1,16 @@
+=============================== ftv35.xml ===================================
+Tabu? true
+Iterations: 25
+Cost: 1933.0
+Number of Neighbours: 1116
+Time: 62370ms
+Memory type: recency
+Tenure final size: 105
+Aspirations: 3362
+Tabu Hits: 82
+Stagnation left: -18
+Local Best Solutions: 14
+Global Best Solutions: 8
+Failed candidate solutions: 5568297
+==================================================================================
+

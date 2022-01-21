@@ -63,7 +63,7 @@ public class FrequencyBasedTabuSearchTest {
 
 
         try {
-            ts1.set(new TabuSearchApp().startProcess(testInstance, "frequency test - frequency", random1, false, maxTriesMove, maxTries, tenureSize, minCost, true, maxStagnantTries, neighbourPerc, stochasticSample, timeLimitMillsecs));
+            ts1.set(new TabuSearchApp().startProcess(testInstance, "frequency test - frequency", random1, false, maxTriesMove, maxTries, tenureSize, minCost, true, maxStagnantTries, neighbourPerc, stochasticSample, timeLimitMillsecs, false));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class FrequencyBasedTabuSearchTest {
         // Irao correr no mesmo tempo que frequency based
         Thread t2 = new Thread( () -> {
             try {
-                ts2.set(new TabuSearchApp().startProcess(testInstance, "frequency test - baseline", random2, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed()));
+                ts2.set(new TabuSearchApp().startProcess(testInstance, "frequency test - baseline", random2, true, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed(), false));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -79,7 +79,7 @@ public class FrequencyBasedTabuSearchTest {
 
         Thread t3 = new Thread( () -> {
             try {
-                ts3.set(new TabuSearchApp().startProcess(testInstance, "frequency test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed()));
+                ts3.set(new TabuSearchApp().startProcess(testInstance, "frequency test - recency", random2, false, maxTriesMove, IGNORE_PARAM, tenureSize, IGNORE_PARAM, false, IGNORE_PARAM, neighbourPerc, stochasticSample, ts1.get().getResults().getTimeElapsed(), false));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

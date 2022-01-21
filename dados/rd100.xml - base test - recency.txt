@@ -1,0 +1,16 @@
+=============================== rd100.xml ===================================
+Tabu? true
+Iterations: 1
+Cost: 33308.40349913625974
+Number of Neighbours: 9500
+Time: 120001ms
+Memory type: recency
+Tenure final size: 300
+Aspirations: 445065
+Tabu Hits: 1
+Stagnation left: -1
+Local Best Solutions: 31
+Global Best Solutions: 1
+Failed candidate solutions: 553928
+==================================================================================
+

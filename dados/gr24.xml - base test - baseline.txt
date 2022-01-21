@@ -1,0 +1,11 @@
+=============================== gr24.xml ===================================
+Tabu? false
+Iterations: 174
+Cost: 3006.0
+Number of Neighbours: 456
+Time: 60029ms
+Local Best Solutions: 9
+Global Best Solutions: 5
+Failed candidate solutions: 15864737
+==================================================================================
+
