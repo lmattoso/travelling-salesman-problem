@@ -19,7 +19,15 @@ public class SolutionEdge implements Comparable<SolutionEdge> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SolutionEdge edge = (SolutionEdge) o;
-        return Objects.equals(city1, edge.getCity1()) && Objects.equals(city2, edge.getCity2());
+        return (Objects.equals(city1, edge.getCity1()) && Objects.equals(city2, edge.getCity2())) || (Objects.equals(city2, edge.getCity1()) && Objects.equals(city1, edge.getCity2())) ;
+    }
+
+    public SolutionEdge clone() {
+        SolutionEdge solutionEdge = new SolutionEdge();
+        solutionEdge.city1 = city1.clone();
+        solutionEdge.city2 = city2.clone();
+
+        return solutionEdge;
     }
 
     @Override

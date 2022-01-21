@@ -47,4 +47,12 @@ public class City {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    protected City clone()  {
+        City city = new City(this.id);
+        for(Integer id : distances.keySet())
+        city.getDistances().put(id, distances.get(id));
+        return city;
+    }
 }

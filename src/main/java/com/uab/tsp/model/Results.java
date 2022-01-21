@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Results {
-    private String algorithm;
+    private String name;
     private Solution solution;
     private long timeElapsed;
     private int iter;
@@ -23,7 +23,7 @@ public class Results {
     @Override
     public String toString() {
         return "Results{" +
-                "algorithm='" + algorithm + '\'' +
+                "name='" + name + '\'' +
                 ", solution=" + solution +
                 ", timeElapsed=" + timeElapsed + "ms" +
                 ", iter=" + iter +

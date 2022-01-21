@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GenerateReportUtil {
 
     private static final List<String> headers = List.of("Iteration", "Try Number", "Cities", "Cost", "Frequency");
-    private static final String FILE_PATH = "";
+    private static final String FILE_PATH = "C:\\temp\\";
 
-    public static void generateReport(Results results) {
+    public synchronized static void generateReport(Results results) {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Results");
@@ -31,7 +31,7 @@ public class GenerateReportUtil {
         createTable(sheet, rowNum, "Global Best Solutions", results.getGlobalBestSolutions());
 
         try {
-            FileOutputStream outputStream = new FileOutputStream(new File(FILE_PATH, generateFileName()));
+            FileOutputStream outputStream = new FileOutputStream(new File(FILE_PATH, generateFileName(results)));
             workbook.write(outputStream);
             workbook.close();
         } catch (IOException e) {
@@ -39,8 +39,8 @@ public class GenerateReportUtil {
         }
     }
 
-    private static String generateFileName() {
-        return new Date().getTime() + ".xlsx";
+    private static String generateFileName(Results results) {
+        return results.getName() + "_" + new Date().getTime() + ".xlsx";
     }
 
     private static void createTable(XSSFSheet sheet, AtomicInteger rowNum, String title, List<Solution> solutions) {

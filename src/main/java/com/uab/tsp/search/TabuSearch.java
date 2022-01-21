@@ -3,26 +3,35 @@ package com.uab.tsp.search;
 import com.uab.tsp.model.Results;
 import com.uab.tsp.model.Solution;
 import com.uab.tsp.model.TwoInterchangeMove;
+import lombok.Data;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Data
 public class TabuSearch {
 
     private final int maxTriesMove;
     private final BigDecimal minCost;
     private final boolean stochasticSample;
     private final double neighbourPerc;
-    private int maxStagnantTries;
+    private final long timeLimitMillsecs;
     private final int maxTries;
-    private int iter = 0;
     private final CircularFifoQueue<TwoInterchangeMove> recencyBasedMemory;
     private final Set<TwoInterchangeMove> frequencyBasedMemory;
     private final boolean isFrequencyBasedMemory;
+    private int maxStagnantTries;
+    private int iter = 0;
+    private boolean ignoreTabu = false;
+    private int aspirations = 0, tabuHits = 0;
+    private Results results = new Results();
+    private Random random;
+    private int failedCandidateSolutions = 0;
+    private static final long GLOBAL_TIMEOUT = 120000;
 
-    public TabuSearch(int tenure, int maxTriesMove, int maxTries, BigDecimal minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample) {
+    public TabuSearch(int tenure, int maxTriesMove, int maxTries, BigDecimal minCost, boolean isFrequencyBasedMemory, int maxStagnantTries, double neighbourPerc, boolean stochasticSample, long timeLimitMillsecs) {
         this.recencyBasedMemory = new CircularFifoQueue<>(tenure);
         this.maxTriesMove = maxTriesMove;
         this.minCost = minCost;
@@ -32,10 +41,11 @@ public class TabuSearch {
         this.maxStagnantTries = maxStagnantTries;
         this.neighbourPerc = neighbourPerc;
         this.stochasticSample = stochasticSample;
+        this.timeLimitMillsecs = timeLimitMillsecs;
     }
 
     public Results search(Solution startingTour) {
-        Results results = new Results();
+
         long timeElapsed = System.currentTimeMillis();
         Solution bestSoFar = startingTour;
         Solution globalBest = startingTour;
@@ -45,29 +55,37 @@ public class TabuSearch {
 
         do {
             for (; tries < maxTriesMove; tries++) {
-                Collection<TwoInterchangeMove> candidates = stochasticSample ? sampleStochastic(candidateSolution.getMoves(), this.neighbourPerc) : sample(candidateSolution.getMoves(), this.neighbourPerc);
+                Collection<TwoInterchangeMove> candidates = stochasticSample ? sampleStochastic(candidateSolution.getMoves(), this.neighbourPerc) : sampleElitist(candidateSolution.getMoves(), this.neighbourPerc);
                 results.setNumberOfNeighbours(candidates.size());
                 for (TwoInterchangeMove candidate : candidates) {
+                    bestMove = bestMove != null ? bestMove : candidate;
+                    Solution candidateSolutionWithNewMove = candidateSolution.apply(candidate);
+                    if ((candidateSolutionWithNewMove.costLessThan(candidateSolution.apply(bestMove)) && !isTabu(candidate)) || aspiration(globalBest, candidate)) {
+                        bestMove = candidate;
+                        candidateSolution = candidateSolutionWithNewMove;
+                        addToTabu(bestMove);
+                        Objects.requireNonNull(bestMove).move().forEach(this::addToTabu);
+                    } else {
+                        failedCandidateSolutions++;
+                    }
 
-                    if (!isTabu(candidate) || aspiration(bestSoFar, candidate)) {
-                        if ((bestMove == null || candidateSolution.apply(candidate).costLessThan(candidateSolution.apply(bestMove)))) {
-                            bestMove = candidate;
-                            candidateSolution = candidateSolution.apply(candidate);
-                        }
+                    if(GLOBAL_TIMEOUT < (System.currentTimeMillis() - timeElapsed)) {
+                        System.err.println("(1) Global timeout reached: " + (System.currentTimeMillis() - timeElapsed)+"ms");
+                        break;
                     }
                 }
 
-                updateTabu();
+                if (bestSoFar.apply(bestMove).costLessThan(bestSoFar)) {
+                    bestSoFar = bestSoFar.apply(bestMove);
+                    bestSoFar.setIteration(iter);
+                    bestSoFar.setTryNumber(tries);
+                    bestSoFar.setFrequency(iter);
+                    results.getLocalBestSolutions().add(bestSoFar);
+                }
 
-                addToTabu(bestMove); // deleted candidate
-                Objects.requireNonNull(bestMove).move().forEach(this::addToTabu);// generated candidate (2 edges)
-
-                candidateSolution = candidateSolution.apply(bestMove);
-                if (candidateSolution.costLessThan(bestSoFar)) {
-                    bestSoFar = candidateSolution;
-                    candidateSolution.setIteration(iter);
-                    candidateSolution.setTryNumber(tries);
-                    results.getLocalBestSolutions().add(candidateSolution);
+                if(GLOBAL_TIMEOUT < (System.currentTimeMillis() - timeElapsed)) {
+                    System.err.println("(2) Global timeout reached: " + (System.currentTimeMillis() - timeElapsed)+"ms");
+                    break;
                 }
             }
 
@@ -75,6 +93,7 @@ public class TabuSearch {
                 globalBest = bestSoFar;
                 globalBest.setIteration(iter);
                 globalBest.setTryNumber(tries);
+                globalBest.setFrequency(iter);
                 results.getGlobalBestSolutions().add(globalBest);
             } else {
                 maxStagnantTries--;
@@ -84,37 +103,76 @@ public class TabuSearch {
             bestSoFar = globalBest;
             candidateSolution = bestSoFar;
             tries = 0;
-        } while (!(iter >= maxTries || globalBest.cost().compareTo(minCost) <= 0 || maxStagnantTries == 0));
+
+            if (timeLimitMillsecs < 0) {
+
+                if (iter >= maxTries) {
+                    System.out.println("Max Tries reached: " + iter);
+                    break;
+                }
+
+                if (globalBest.cost().compareTo(minCost) <= 0) {
+                    System.out.println("Min cost reached: " + globalBest.cost());
+                    break;
+                }
+
+                if (maxStagnantTries == 0) {
+                    //System.out.println("Max stagnant tries reached");
+                    break;
+                }
+
+            } else if (timeLimitMillsecs < (System.currentTimeMillis() - timeElapsed)) {
+                System.out.println("Time limit reached");
+                break;
+            }
+
+            if(GLOBAL_TIMEOUT < (System.currentTimeMillis() - timeElapsed)) {
+                System.err.println("(3) Global timeout reached: " + (System.currentTimeMillis() - timeElapsed)+"ms");
+                break;
+            }
+
+
+        } while (true);
 
         results.setSolution(globalBest);
         results.setTimeElapsed(System.currentTimeMillis() - timeElapsed);
-        results.setAlgorithm("TabuSearch");
+        results.setName("TabuSearch");
         results.setIter(iter);
         results.setTries(tries);
-        results.setTenureSize(isFrequencyBasedMemory ? this.frequencyBasedMemory.size() :  this.recencyBasedMemory.size());
+        results.setTenureSize(isFrequencyBasedMemory ? this.frequencyBasedMemory.size() : this.recencyBasedMemory.size());
         results.setStagnantTriesLeft(maxStagnantTries);
 
         return results;
     }
 
-    private Solution randomizeCandidate(Solution candidateSolution) {
-        return candidateSolution.generateRandom();
-    }
+    protected boolean aspiration(Solution best, TwoInterchangeMove candidate) {
+        if (ignoreTabu)
+            return false;
 
-    private boolean aspiration(Solution bestSoFar, TwoInterchangeMove candidate) {
-        Solution bestSoFarWithNewMove = bestSoFar.apply(candidate);
-        return bestSoFarWithNewMove.costLessThan(bestSoFar);
+        Solution bestWithNewMove = best.apply(candidate);
+        if (bestWithNewMove.costLessThan(best)) {
+            aspirations++;
+            return true;
+        }
+        return false;
     }
 
     private void updateTabu() {
         if (isFrequencyBasedMemory) {
             frequencyBasedMemory.forEach(TwoInterchangeMove::decreaseFrequency);
+            //System.out.println(frequencyBasedMemory.size());
+        } else {
+            //System.out.println(recencyBasedMemory.size());
         }
+
     }
 
     private void addToTabu(final TwoInterchangeMove currentEdge) {
+        if (ignoreTabu)
+            return;
         if (!isFrequencyBasedMemory) {
             if (!recencyBasedMemory.contains(currentEdge)) {
+
                 recencyBasedMemory.add(currentEdge);
             }
         } else {
@@ -130,24 +188,35 @@ public class TabuSearch {
     }
 
     private boolean isTabu(final TwoInterchangeMove move) {
+        if (ignoreTabu)
+            return false;
+
+        boolean res;
         if (!isFrequencyBasedMemory) {
-            return recencyBasedMemory.contains(move);
+            res = recencyBasedMemory.contains(move);
         } else {
             TwoInterchangeMove fromListMove = frequencyBasedMemory.stream().filter(f -> f.equals(move)).findAny().orElse(null);
-            return fromListMove != null && fromListMove.getFrequency() > 0;
+            res = fromListMove != null && fromListMove.getFrequency() > 0;
         }
+        if (res)
+            tabuHits++;
+        return res;
     }
 
-    private Collection<TwoInterchangeMove> sample(Collection<TwoInterchangeMove> moves, double size) {
-        int s = (int)(moves.size() * size);
-        return moves.stream().sorted( (m1, m2) -> m2.distance().compareTo(m1.distance())).collect(Collectors.toList()).subList(0, s);
+    private Collection<TwoInterchangeMove> sampleElitist(Collection<TwoInterchangeMove> moves, double size) {
+        if (size == 1)
+            return moves;
+        int s = (int) (moves.size() * size);
+        return moves.stream().sorted((m1, m2) -> m2.distance().compareTo(m1.distance())).collect(Collectors.toList()).subList(0, s);
     }
 
     private Collection<TwoInterchangeMove> sampleStochastic(List<TwoInterchangeMove> moves, double size) {
-        if(size == 1)
+        if (size == 1)
             return moves;
-        int s = (int)(moves.size() * size);
-        Collections.shuffle(moves);
+        int s = (int) (moves.size() * size);
+        if (random == null)
+            random = new Random();
+        Collections.shuffle(moves, random);
         return new ArrayList<>(moves).subList(0, s);
     }
 }

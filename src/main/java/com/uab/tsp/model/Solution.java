@@ -37,8 +37,8 @@ public class Solution {
         return this.cost().compareTo(other.cost()) < 0;
     }
 
-    public void shuffle() {
-        Collections.shuffle(list);
+    public void shuffle(Random random) {
+        Collections.shuffle(list, random);
     }
 
     protected Solution clone() {
@@ -127,47 +127,4 @@ public class Solution {
         list.set(posB, a);
     }
 
-    public Solution generateRandom() {
-        Solution clone = this.clone();
-        clone.shuffle();
-        return clone;
-    }
-
-    public void decreaseFrequency() {
-        if(frequency  > 0)
-            frequency--;
-    }
-
-    public void increaseFrequency() {
-        frequency++;
-    }
-
-    public Collection<Solution> generateNeighborhood() {
-        Set<Solution> list = new HashSet<>();
-        do{
-            Solution clone = this.clone();
-            clone.randomSwap();
-
-            list.add(clone);
-        }while(list.size() <= this.getList().size());
-        return list;
-    }
-
-    private void randomSwap() {
-        Random random = new Random();
-        if(list != null && list.size() > 2) {
-            int pos1 = random.nextInt(list.size());
-            int pos2;
-            do {
-                pos2 = random.nextInt(list.size());
-
-            } while (pos1 == pos2);
-
-            City city1 = list.get(pos1);
-            City city2 = list.get(pos2);
-
-            list.set(pos1, city2);
-            list.set(pos2, city1);
-        }
-    }
 }

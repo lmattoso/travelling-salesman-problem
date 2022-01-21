@@ -49,6 +49,15 @@ public class TwoInterchangeMove implements Comparable<TwoInterchangeMove> {
     }
 
     @Override
+    public TwoInterchangeMove clone() {
+        TwoInterchangeMove clone = new TwoInterchangeMove();
+        clone.edge1 = edge1.clone();
+        clone.edge2 = edge2.clone();
+
+        return clone;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(edge1, edge2);
     }
